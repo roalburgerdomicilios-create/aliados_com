@@ -73,6 +73,17 @@ p, span, div, h1, h2, h3, h4, h5, h6, label, a, li, td, th {
     color: var(--color-blanco) !important;
 }
 
+/* EXCEPCIÓN: Labels negros en secciones principales para contraste */
+.seccion label,
+#seccion-configuracion label,
+#seccion-aliados label,
+#seccion-cupones label,
+#seccion-clientes label,
+.config-form label,
+.form-group label {
+    color: #000000 !important;
+}
+
 /* Force black backgrounds on common container elements */
 .table-container, .modal-content, .stat-card, .empresa-info-card,
 .form-group input, .form-group select, .form-group textarea,
@@ -1100,9 +1111,20 @@ body {
 
 /* Asegurar contraste en todas las secciones */
 .seccion .form-group label,
-.config-form .form-group label {
-    color: var(--color-negro) !important;
-    font-weight: 600;
+.config-form .form-group label,
+#seccion-configuracion label,
+#seccion-aliados label,
+#seccion-cupones label,
+#seccion-clientes label,
+label[for="config-nombre"],
+label[for="config-telefono"],
+label[for="config-direccion"],
+label[for="config-logo"] {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
 }
 
 .form-group input,
