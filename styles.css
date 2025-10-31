@@ -1093,8 +1093,16 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--color-blanco);
+    color: var(--color-negro);
     font-size: 0.9rem;
+    text-shadow: none;
+}
+
+/* Asegurar contraste en todas las secciones */
+.seccion .form-group label,
+.config-form .form-group label {
+    color: var(--color-negro) !important;
+    font-weight: 600;
 }
 
 .form-group input,
