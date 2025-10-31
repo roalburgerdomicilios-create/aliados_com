@@ -440,10 +440,13 @@
                         <div class="form-group">
                             <label for="config-logo">Logo de la Empresa</label>
                             <div class="logo-upload">
-                                <input type="file" id="config-logo" accept="image/*">
+                                <input type="file" id="config-logo" accept="image/*" style="display: none;">
                                 <div class="logo-preview">
-                                    <img id="config-logo-preview" src="assets/placeholder-logo.png" alt="Logo actual">
+                                    <img id="config-logo-preview" src="assets/placeholder-logo.png" alt="Vista previa del logo">
                                 </div>
+                                <button type="button" class="btn-cargar-logo" onclick="document.getElementById('config-logo').click()">
+                                    📷 Cargar Logo
+                                </button>
                             </div>
                         </div>
                         

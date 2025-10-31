@@ -221,7 +221,12 @@ function setupConfigEventListeners() {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('config-logo-preview').src = e.target.result;
+                    const logoPreview = document.getElementById('config-logo-preview');
+                    logoPreview.src = e.target.result;
+                    logoPreview.style.display = 'block';
+                    logoPreview.style.maxWidth = '100%';
+                    logoPreview.style.maxHeight = '150px';
+                    logoPreview.style.objectFit = 'contain';
                 };
                 reader.readAsDataURL(file);
             }

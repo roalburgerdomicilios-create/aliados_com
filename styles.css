@@ -273,10 +273,21 @@ body {
 
 .logo-preview {
     position: relative;
-    min-height: 100px;
+    min-height: 150px;
+    max-height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.logo-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: calc(var(--border-radius) - 2px);
 }
 
 .logo-placeholder {
@@ -302,6 +313,35 @@ body {
     max-height: 120px;
     border-radius: var(--border-radius);
     box-shadow: var(--sombra-md);
+}
+
+/* Botón Cargar Logo */
+.btn-cargar-logo {
+    background: var(--color-azul-principal);
+    color: var(--color-blanco);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transicion);
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--sombra-sm);
+}
+
+.btn-cargar-logo:hover {
+    background: var(--color-azul-oscuro);
+    transform: translateY(-1px);
+    box-shadow: var(--sombra-md);
+}
+
+.btn-cargar-logo:active {
+    transform: translateY(0);
+    box-shadow: var(--sombra-sm);
 }
 
 .welcome-btn {
