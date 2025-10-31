@@ -2306,13 +2306,24 @@ async function exportarCuponesExcel() {
         const XLSX = await cargarLibreriaXLSX();
         
         // Obtener el aliado seleccionado para exportar
-        const aliadoSeleccionado = document.getElementById('filtro-aliado-export').value;
+        const selectElement = document.getElementById('filtro-aliado-export');
+        const aliadoSeleccionado = selectElement ? selectElement.value : '';
+        
+        console.log('🔍 Debug Exportación:');
+        console.log('Selector encontrado:', selectElement);
+        console.log('Valor seleccionado:', aliadoSeleccionado);
+        console.log('Total cupones en DB:', (db.cupones || []).length);
         
         // Filtrar cupones por aliado si se seleccionó uno específico
         let cuponesFiltrados = db.cupones || [];
-        if (aliadoSeleccionado) {
-            cuponesFiltrados = cuponesFiltrados.filter(cupon => cupon.aliadoId === aliadoSeleccionado);
+        if (aliadoSeleccionado && aliadoSeleccionado !== '') {
+            cuponesFiltrados = cuponesFiltrados.filter(cupon => {
+                console.log(`Comparando: ${cupon.aliadoId} === ${aliadoSeleccionado}`);
+                return cupon.aliadoId === aliadoSeleccionado;
+            });
         }
+        
+        console.log('Cupones filtrados:', cuponesFiltrados.length);
         
         const datosExportar = cuponesFiltrados.map(cupon => {
             const aliado = db.aliados.find(a => a.id === cupon.aliadoId);
