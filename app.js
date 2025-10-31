@@ -1445,6 +1445,18 @@ function actualizarSelectAliados() {
         });
     }
     
+    // Select en filtro de exportación de cupones
+    const filtroExport = document.getElementById('filtro-aliado-export');
+    if (filtroExport) {
+        filtroExport.innerHTML = '<option value="">📋 Exportar todos</option>';
+        aliados.forEach(aliado => {
+            const option = document.createElement('option');
+            option.value = aliado.id;
+            option.textContent = `📊 ${aliado.nombre}`;
+            filtroExport.appendChild(option);
+        });
+    }
+    
     // Select en filtro de cupones externos
     const filtroExterno = document.getElementById('filtro-aliado-externo');
     if (filtroExterno) {
@@ -2293,7 +2305,16 @@ async function exportarCuponesExcel() {
     try {
         const XLSX = await cargarLibreriaXLSX();
         
-        const datosExportar = (db.cupones || []).map(cupon => {
+        // Obtener el aliado seleccionado para exportar
+        const aliadoSeleccionado = document.getElementById('filtro-aliado-export').value;
+        
+        // Filtrar cupones por aliado si se seleccionó uno específico
+        let cuponesFiltrados = db.cupones || [];
+        if (aliadoSeleccionado) {
+            cuponesFiltrados = cuponesFiltrados.filter(cupon => cupon.aliadoId === aliadoSeleccionado);
+        }
+        
+        const datosExportar = cuponesFiltrados.map(cupon => {
             const aliado = db.aliados.find(a => a.id === cupon.aliadoId);
             return {
                 'Aliado': aliado ? aliado.nombre : 'Sin aliado',
@@ -2310,14 +2331,31 @@ async function exportarCuponesExcel() {
             };
         });
         
+        if (datosExportar.length === 0) {
+            mostrarNotificacion('No hay cupones para exportar con el filtro seleccionado', 'warning');
+            return;
+        }
+        
         const ws = XLSX.utils.json_to_sheet(datosExportar);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Cupones");
         
+        // Crear nombre de archivo con información del filtro
         const fecha = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(wb, `cupones_${fecha}.xlsx`);
+        let nombreArchivo = `cupones_${fecha}`;
         
-        mostrarNotificacion('Cupones exportados correctamente', 'success');
+        if (aliadoSeleccionado) {
+            const aliado = db.aliados.find(a => a.id === aliadoSeleccionado);
+            const nombreAliado = aliado ? aliado.nombre.replace(/[^a-zA-Z0-9]/g, '_') : 'aliado';
+            nombreArchivo = `cupones_${nombreAliado}_${fecha}`;
+        }
+        
+        XLSX.writeFile(wb, `${nombreArchivo}.xlsx`);
+        
+        const mensaje = aliadoSeleccionado ? 
+            `Cupones del aliado exportados correctamente (${datosExportar.length} cupones)` : 
+            `Cupones exportados correctamente (${datosExportar.length} cupones)`;
+        mostrarNotificacion(mensaje, 'success');
         
     } catch (error) {
         console.error('Error exportando:', error);
