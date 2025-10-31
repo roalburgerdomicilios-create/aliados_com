@@ -610,6 +610,16 @@ body {
     margin-top: 1.5rem;
 }
 
+/* Asegurar visibilidad de selectores de filtro */
+#filtro-aliado-cupones,
+#filtro-aliado-export {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-width: 200px;
+    max-width: 250px;
+}
+
 /* ===========================
    ESTADÍSTICAS MODERNAS
    =========================== */

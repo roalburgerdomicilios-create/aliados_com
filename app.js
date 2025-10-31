@@ -1447,6 +1447,7 @@ function actualizarSelectAliados() {
     
     // Select en filtro de exportación de cupones
     const filtroExport = document.getElementById('filtro-aliado-export');
+    console.log('🔍 Debug Select Export:', filtroExport);
     if (filtroExport) {
         filtroExport.innerHTML = '<option value="">📋 Exportar todos</option>';
         aliados.forEach(aliado => {
@@ -1455,6 +1456,9 @@ function actualizarSelectAliados() {
             option.textContent = `📊 ${aliado.nombre}`;
             filtroExport.appendChild(option);
         });
+        console.log('✅ Select de exportación actualizado con', aliados.length, 'aliados');
+    } else {
+        console.error('❌ No se encontró el select filtro-aliado-export');
     }
     
     // Select en filtro de cupones externos
