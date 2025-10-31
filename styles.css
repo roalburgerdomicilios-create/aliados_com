@@ -915,12 +915,36 @@ body {
     border-radius: var(--border-radius-lg);
     box-shadow: var(--sombra-md);
     overflow: hidden;
+    overflow-x: auto; /* Scroll horizontal automático */
     border: 1px solid var(--color-gris-medio);
     margin-top: 1.5rem;
+    /* Scroll styling para mejor UX */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-azul-principal) transparent;
+}
+
+/* Estilo de scrollbar para WebKit (Chrome, Safari, etc.) */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--color-azul-principal);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--color-azul-oscuro);
 }
 
 .data-table {
     width: 100%;
+    min-width: 800px; /* Ancho mínimo para mantener estructura */
     border-collapse: collapse;
     font-size: 0.9rem;
 }
@@ -1510,6 +1534,28 @@ div.cupon-chip,
     .nav-btn {
         padding: 0.5rem 0.75rem;
         font-size: 0.8rem;
+    }
+    
+    /* Optimización de tablas para móviles */
+    .table-container {
+        margin: 0.5rem 0;
+        border-radius: var(--border-radius);
+    }
+    
+    .data-table {
+        min-width: 600px; /* Reducido para móviles */
+        font-size: 0.8rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem 0.75rem;
+        white-space: nowrap;
+    }
+    
+    /* Scrollbar más visible en móviles */
+    .table-container::-webkit-scrollbar {
+        height: 12px;
     }
     
     .nav-btn svg {
