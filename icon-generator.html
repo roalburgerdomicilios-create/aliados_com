@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Iconos PWA - aliados_com</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .icon-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .icon-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+        }
+        
+        .icon-canvas {
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button {
+            background: #fff;
+            color: #2563eb;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-all {
+            background: #10b981;
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            font-family: 'Anton', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Generador de Iconos PWA</h1>
+        
+        <div class="info">
+            <h3>📱 Iconos para aliados_com PWA</h3>
+            <p>Esta herramienta genera automáticamente todos los iconos necesarios para la Progressive Web App con el diseño azul milenium.</p>
+        </div>
+        
+        <button onclick="generateAllIcons()" class="download-all">
+            ⚡ Generar Todos los Iconos
+        </button>
+        
+        <div class="icon-preview" id="iconPreview">
+            <!-- Los iconos se generarán aquí dinámicamente -->
+        </div>
+        
+        <button onclick="downloadAllIcons()" class="download-all" id="downloadBtn" style="display: none;">
+            📥 Descargar Todos los Iconos
+        </button>
+    </div>
+
+    <script>
+        // Tamaños de iconos necesarios para PWA
+        const iconSizes = [
+            { size: 72, name: 'icon-72.png', desc: 'Notificaciones' },
+            { size: 96, name: 'icon-96.png', desc: 'Dispositivos' },
+            { size: 128, name: 'icon-128.png', desc: 'Chrome Web Store' },
+            { size: 144, name: 'icon-144.png', desc: 'Windows' },
+            { size: 152, name: 'icon-152.png', desc: 'iOS' },
+            { size: 192, name: 'icon-192.png', desc: 'Android Chrome' },
+            { size: 384, name: 'icon-384.png', desc: 'Android Splash' },
+            { size: 512, name: 'icon-512.png', desc: 'Android Chrome' }
+        ];
+        
+        let generatedIcons = {};
+        
+        // Función para crear un icono con el diseño de aliados_com
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Fondo azul milenium con gradiente
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1d4ed8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Borde redondeado
+            const borderRadius = size * 0.1;
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, borderRadius);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            
+            // Círculo blanco central
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const circleRadius = size * 0.3;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, circleRadius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Icono de cupón/ticket en el centro
+            ctx.fillStyle = '#2563eb';
+            const iconSize = size * 0.2;
+            const iconX = centerX - iconSize / 2;
+            const iconY = centerY - iconSize / 2;
+            
+            // Dibujar icono simplificado de cupón
+            ctx.fillRect(iconX, iconY, iconSize, iconSize * 0.7);
+            
+            // Perforaciones del cupón
+            const holeRadius = iconSize * 0.08;
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(iconX - holeRadius/2, iconY + iconSize * 0.35, holeRadius, 0, 2 * Math.PI);
+            ctx.arc(iconX + iconSize + holeRadius/2, iconY + iconSize * 0.35, holeRadius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Texto "A" si el icono es grande
+            if (size >= 128) {
+                ctx.fillStyle = '#2563eb';
+                ctx.font = `bold ${size * 0.15}px Anton, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('A', centerX, iconY + iconSize * 0.35);
+            }
+            
+            // Sombra interna sutil
+            const shadowGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, size/2);
+            shadowGradient.addColorStop(0, 'transparent');
+            shadowGradient.addColorStop(1, 'rgba(0,0,0,0.1)');
+            ctx.fillStyle = shadowGradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            return canvas;
+        }
+        
+        // Generar todos los iconos
+        function generateAllIcons() {
+            const preview = document.getElementById('iconPreview');
+            preview.innerHTML = '';
+            generatedIcons = {};
+            
+            iconSizes.forEach(iconInfo => {
+                // Crear el icono
+                const canvas = createIcon(iconInfo.size);
+                const dataURL = canvas.toDataURL('image/png');
+                
+                // Guardar para descarga
+                generatedIcons[iconInfo.name] = dataURL;
+                
+                // Crear elemento de preview
+                const iconItem = document.createElement('div');
+                iconItem.className = 'icon-item';
+                
+                // Canvas para mostrar
+                const displayCanvas = canvas.cloneNode();
+                const displayCtx = displayCanvas.getContext('2d');
+                displayCtx.drawImage(canvas, 0, 0);
+                displayCanvas.className = 'icon-canvas';
+                displayCanvas.style.width = '80px';
+                displayCanvas.style.height = '80px';
+                
+                // Información del icono
+                const info = document.createElement('div');
+                info.innerHTML = `
+                    <strong>${iconInfo.size}x${iconInfo.size}</strong><br>
+                    <small>${iconInfo.desc}</small><br>
+                    <button onclick="downloadIcon('${iconInfo.name}')" style="font-size: 12px; padding: 5px 10px; margin-top: 5px;">
+                        💾 Descargar
+                    </button>
+                `;
+                
+                iconItem.appendChild(displayCanvas);
+                iconItem.appendChild(info);
+                preview.appendChild(iconItem);
+            });
+            
+            // Mostrar botón de descarga masiva
+            document.getElementById('downloadBtn').style.display = 'block';
+            
+            console.log('✅ Todos los iconos generados correctamente');
+        }
+        
+        // Descargar un icono individual
+        function downloadIcon(filename) {
+            if (generatedIcons[filename]) {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = generatedIcons[filename];
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log(`📥 Descargado: ${filename}`);
+            }
+        }
+        
+        // Descargar todos los iconos
+        function downloadAllIcons() {
+            Object.keys(generatedIcons).forEach(filename => {
+                setTimeout(() => downloadIcon(filename), 100);
+            });
+            
+            // También crear el archivo manifest actualizado
+            setTimeout(() => {
+                const manifestContent = {
+                    "name": "aliados_com - Sistema de Cupones",
+                    "short_name": "aliados_com",
+                    "description": "Sistema moderno de gestión de cupones y aliados comerciales",
+                    "start_url": "./",
+                    "display": "standalone",
+                    "background_color": "#2563eb",
+                    "theme_color": "#2563eb",
+                    "orientation": "portrait-primary",
+                    "icons": iconSizes.map(icon => ({
+                        "src": `./assets/${icon.name}`,
+                        "sizes": `${icon.size}x${icon.size}`,
+                        "type": "image/png",
+                        "purpose": icon.size >= 192 ? "any maskable" : "any"
+                    })),
+                    "shortcuts": [
+                        {
+                            "name": "Nuevo Cupón",
+                            "short_name": "Nuevo",
+                            "description": "Crear un nuevo cupón",
+                            "url": "./?action=new-coupon",
+                            "icons": [
+                                {
+                                    "src": "./assets/icon-192.png",
+                                    "sizes": "192x192"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Ver Aliados",
+                            "short_name": "Aliados",
+                            "description": "Gestionar aliados comerciales",
+                            "url": "./?action=allies",
+                            "icons": [
+                                {
+                                    "src": "./assets/icon-192.png",
+                                    "sizes": "192x192"
+                                }
+                            ]
+                        }
+                    ],
+                    "categories": ["business", "productivity", "utilities"],
+                    "screenshots": [],
+                    "prefer_related_applications": false
+                };
+                
+                const manifestBlob = new Blob([JSON.stringify(manifestContent, null, 2)], 
+                    { type: 'application/json' });
+                const manifestURL = URL.createObjectURL(manifestBlob);
+                
+                const link = document.createElement('a');
+                link.download = 'manifest.webmanifest';
+                link.href = manifestURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log('📥 Manifest actualizado descargado');
+            }, 500);
+            
+            console.log('📦 Descarga masiva iniciada');
+        }
+        
+        // Polyfill para roundRect si no está disponible
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+        
+        // Generar automáticamente al cargar
+        window.addEventListener('load', () => {
+            setTimeout(generateAllIcons, 500);
+        });
+    </script>
+</body>
+</html>

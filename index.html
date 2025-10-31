@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aliados_com - Sistema de Cupones</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Sistema PWA para gestión de cupones promocionales entre empresas y aliados">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="aliados_com">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- External Libraries (Loaded dynamically) -->
+    <script>
+        window.XLSX_CDN = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+        window.HTML2CANVAS_CDN = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    </script>
+</head>
+<body>
+    <!-- Aplicación Principal -->
+    <div id="main-app" class="main-app" style="display: block;">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img id="nav-logo-img" src="assets/placeholder-logo.png" alt="Logo">
+                    <span id="nav-empresa-nombre">aliados_com</span>
+                </div>
+                <div class="nav-menu">
+                    <button class="nav-btn active" data-section="inicio">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                        Inicio
+                    </button>
+                    <button class="nav-btn" data-section="aliados">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Aliados
+                    </button>
+                    <button class="nav-btn" data-section="cupones">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        Cupones
+                    </button>
+                    <button class="nav-btn" data-section="clientes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="m22 21-3-3m0 0a3 3 0 1 0-4.24-4.24L12 12"/>
+                        </svg>
+                        Clientes
+                    </button>
+                    <button class="nav-btn" data-section="cupones-importados">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10,9 9,9 8,9"/>
+                        </svg>
+                        Externos
+                    </button>
+                    <button class="nav-btn" data-section="configuracion">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="m12 1 1.68 1.32a2 2 0 0 0 2.12.44l2.36-.64a2 2 0 0 1 2.5 1.26l.64 2.36a2 2 0 0 0 1.88 1.38H24a2 2 0 0 1 2 2v2.34a2 2 0 0 1-1.26 1.86l-2.36.64a2 2 0 0 0-1.38 1.88V17"/>
+                        </svg>
+                        Config
+                    </button>
+                </div>
+                <div class="nav-user">
+                    <button class="user-menu-btn" onclick="mostrarMenuUsuario()">
+                        <img id="user-avatar" src="assets/placeholder-logo.svg" alt="Usuario">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <!-- Sección Inicio -->
+            <section id="seccion-inicio" class="seccion activa">
+                <div class="section-header">
+                    <h1 class="section-title">Panel de Control</h1>
+                    <p class="section-subtitle">Gestiona tu programa de aliados y cupones promocionales</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-aliados">0</h3>
+                            <p>Aliados Activos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-cupones">0</h3>
+                            <p>Cupones Generados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-clientes">0</h3>
+                            <p>Clientes Únicos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="cupones-redimidos">0</h3>
+                            <p>Cupones Redimidos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empresa-info-card">
+                    <div class="empresa-header">
+                        <img id="empresa-logo-display" src="assets/placeholder-logo.png" alt="Logo Empresa">
+                        <div class="empresa-details">
+                            <h2 id="empresa-nombre-display">Tu Empresa</h2>
+                            <p id="empresa-direccion-display">Dirección no configurada</p>
+                            <div class="empresa-contact">
+                                <span id="empresa-telefono-display">Teléfono no configurado</span>
+                                <a id="empresa-instagram-display" href="#" target="_blank" style="display: none;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                        <path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                                    </svg>
+                                    Instagram
+                                </a>
+                            </div>
+                        </div>
+                        <button class="edit-empresa-btn" onclick="mostrarSeccion('configuracion')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m18 2 4 4L12 16l-4 4-4-4L14 6z"/>
+                            </svg>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Aliados -->
+            <section id="seccion-aliados" class="seccion">
+                <div class="section-header">
+                    <h1 class="section-title">Gestión de Aliados</h1>
+                    <div class="section-actions">
+                        <div class="search-container">
+                            <input type="text" id="buscar-aliado" placeholder="Buscar aliados...">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                        </div>
+                        <button class="btn btn-primary" onclick="abrirModalAliado()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Nuevo Aliado
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="tabla-aliados" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Logo</th>
+                                <th>Nombre</th>
+                                <th>Alias</th>
+                                <th>Encargado</th>
+                                <th>WhatsApp</th>
+                                <th>Cupones</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Panel de cupones por aliado -->
+                <div id="panel-cupones-aliado" class="panel-expandible" style="display: none;">
+                    <div class="panel-header">
+                        <h3 id="titulo-cupones-aliado">Cupones del Aliado</h3>
+                        <button class="btn-close" onclick="ocultarCuponesAliado()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="panel-body">
+                        <table id="tabla-cupones-aliado" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Vencimiento</th>
+                                    <th>Estado</th>
+                                    <th>Cliente</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Datos dinámicos -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Cupones -->
+            <section id="seccion-cupones" class="seccion">
+                <div class="section-header">
+                    <h1 class="section-title">Gestión de Cupones</h1>
+                    <div class="section-actions">
+                        <select id="filtro-aliado-cupones" class="select-input">
+                            <option value="">Todos los aliados</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="eliminarTodosCupones()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                            </svg>
+                            Eliminar Todos
+                        </button>
+                        <button class="btn btn-success" onclick="exportarCuponesExcel()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Exportar Excel
+                        </button>
+                        <button class="btn btn-primary" onclick="abrirModalCupon()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Nuevo Cupón
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="tabla-cupones" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Aliado</th>
+                                <th>Vence</th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cliente</th>
+                                <th>WhatsApp</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sección Clientes -->
+            <section id="seccion-clientes" class="seccion">
+                <div class="section-header">
+                    <h1 class="section-title">Base de Clientes</h1>
+                    <div class="section-actions">
+                        <div class="search-container">
+                            <input type="text" id="buscar-cliente" placeholder="Buscar clientes...">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                        </div>
+                        <button class="btn btn-success" onclick="exportarClientesExcel()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Exportar Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="tabla-clientes" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>WhatsApp</th>
+                                <th>Aliado</th>
+                                <th>Código Cupón</th>
+                                <th>Fecha Redención</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sección Cupones Externos -->
+            <section id="seccion-cupones-importados" class="seccion">
+                <div class="section-header">
+                    <h1 class="section-title">Cupones Externos</h1>
+                    <div class="section-actions">
+                        <div class="search-container">
+                            <input type="text" id="buscar-cupon-externo" placeholder="Buscar cupones externos...">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                        </div>
+                        <select id="filtro-aliado-externo" class="select-input">
+                            <option value="">Todos los aliados</option>
+                        </select>
+                        <input type="file" id="importar-archivo" accept=".csv,.xlsx" style="display: none;" onchange="importarCupones(event)">
+                        <button class="btn btn-info" onclick="document.getElementById('importar-archivo').click()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Importar Archivo
+                        </button>
+                        <button class="btn btn-secondary" onclick="eliminarTodosCuponesExternos()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                            </svg>
+                            Eliminar Todos
+                        </button>
+                        <button class="btn btn-success" onclick="exportarCuponesExternosExcel()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Exportar Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="tabla-cupones-externos" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Aliado</th>
+                                <th>Vencimiento</th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Origen</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sección Configuración -->
+            <section id="seccion-configuracion" class="seccion">
+                <div class="section-header">
+                    <h1 class="section-title">Configuración</h1>
+                    <p class="section-subtitle">Personaliza la información de tu empresa</p>
+                </div>
+                
+                <div class="config-container">
+                    <form id="form-configuracion" class="config-form">
+                        <div class="form-group">
+                            <label for="config-logo">Logo de la Empresa</label>
+                            <div class="logo-upload">
+                                <input type="file" id="config-logo" accept="image/*">
+                                <div class="logo-preview">
+                                    <img id="config-logo-preview" src="assets/placeholder-logo.png" alt="Logo actual">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="config-nombre">Nombre de la Empresa</label>
+                                <input type="text" id="config-nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="config-telefono">Teléfono/WhatsApp</label>
+                                <input type="tel" id="config-telefono">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="config-direccion">Dirección</label>
+                            <input type="text" id="config-direccion">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="config-instagram">Instagram</label>
+                            <input type="url" id="config-instagram" placeholder="https://www.instagram.com/tu_empresa">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17,21 17,13 7,13 7,21"/>
+                                    <polyline points="7,3 7,8 15,8"/>
+                                </svg>
+                                Guardar Configuración
+                            </button>
+                            <button type="button" class="btn btn-info" onclick="crearBackup()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Exportar Backup
+                            </button>
+                            <input type="file" id="importar-backup" accept=".json" style="display: none;" onchange="restaurarBackup(event)">
+                            <button type="button" class="btn btn-warning" onclick="document.getElementById('importar-backup').click()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17,6 12,1 7,6"/>
+                                    <line x1="12" y1="1" x2="12" y2="13"/>
+                                </svg>
+                                Importar Backup
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modales -->
+    <!-- Modal Aliado -->
+    <div id="modal-aliado" class="modal">
+        <div class="modal-overlay" onclick="cerrarModalAliado()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-aliado-titulo">Nuevo Aliado</h2>
+                <button class="modal-close" onclick="cerrarModalAliado()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-aliado">
+                    <div class="form-group">
+                        <label for="aliado-logo">Logo del Aliado</label>
+                        <input type="file" id="aliado-logo" name="logo" accept="image/*">
+                        <img id="aliado-logo-preview" class="logo-preview" style="display: none; margin-top: 10px; max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px solid var(--color-gris-medio);" alt="Vista previa del logo">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aliado-nombre">Nombre del Aliado</label>
+                            <input type="text" id="aliado-nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="aliado-alias">Alias (con @)</label>
+                            <input type="text" id="aliado-alias" name="alias" placeholder="@alias" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="aliado-encargado">Nombre del Encargado</label>
+                            <input type="text" id="aliado-encargado" name="encargado">
+                        </div>
+                        <div class="form-group">
+                            <label for="aliado-whatsapp">WhatsApp</label>
+                            <input type="tel" id="aliado-whatsapp" name="whatsapp">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aliado-instagram">Instagram</label>
+                        <input type="url" id="aliado-instagram" name="instagram" placeholder="https://instagram.com/aliado">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalAliado()">Cancelar</button>
+                <button type="submit" form="form-aliado" class="btn btn-primary">Guardar Aliado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cupón -->
+    <div id="modal-cupon" class="modal">
+        <div class="modal-overlay" onclick="cerrarModalCupon()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Generar Cupón</h2>
+                <button class="modal-close" onclick="cerrarModalCupon()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-cupon">
+                    <div class="form-group">
+                        <label for="cupon-aliado">Seleccionar Aliado</label>
+                        <select id="cupon-aliado" name="aliado" required>
+                            <option value="">Selecciona un aliado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cupon-imagen">Imagen Promocional</label>
+                        <input type="file" id="cupon-imagen" name="imagen" accept="image/*" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cupon-descripcion">Descripción del Cupón</label>
+                        <input type="text" id="cupon-descripcion" name="descripcion" placeholder="Ej: 2x1 en pizza familiar" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cupon-vencimiento">Fecha de Vencimiento</label>
+                            <input type="date" id="cupon-vencimiento" name="vencimiento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cupon-cantidad">Cantidad</label>
+                            <input type="number" id="cupon-cantidad" name="cantidad" min="1" max="50" value="1" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalCupon()">Cancelar</button>
+                <button type="submit" form="form-cupon" class="btn btn-primary">Generar Cupón(es)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Vista Previa -->
+    <div id="modal-preview" class="modal modal-large">
+        <div class="modal-overlay" onclick="cerrarModalPreview()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Vista Previa del Cupón</h2>
+                <button class="modal-close" onclick="cerrarModalPreview()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="preview-container">
+                    <!-- Aquí se renderizará el cupón -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalPreview()">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="descargarCuponPNG()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Descargar PNG
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Redimir -->
+    <div id="modal-redimir" class="modal">
+        <div class="modal-overlay" onclick="cerrarModalRedimir()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Redimir Cupón</h2>
+                <button class="modal-close" onclick="cerrarModalRedimir()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-redimir">
+                    <div class="form-group">
+                        <label for="redimir-codigo">Código del Cupón</label>
+                        <input type="text" id="redimir-codigo" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="redimir-cliente">Nombre del Cliente</label>
+                        <input type="text" id="redimir-cliente" name="cliente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="redimir-whatsapp">WhatsApp del Cliente</label>
+                        <input type="tel" id="redimir-whatsapp" name="whatsapp" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalRedimir()">Cancelar</button>
+                <button type="submit" form="form-redimir" class="btn btn-success">Confirmar Redención</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Vista Previa Importación -->
+    <div id="modal-preview-importacion" class="modal modal-large">
+        <div class="modal-overlay" onclick="cerrarModalPreviewImportacion()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Vista Previa de Importación</h2>
+                <button class="modal-close" onclick="cerrarModalPreviewImportacion()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="preview-importacion-container">
+                    <!-- Vista previa de datos a importar -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalPreviewImportacion()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="confirmarImportacion()">Importar Datos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
