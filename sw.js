@@ -5,8 +5,8 @@
  * ===========================
  */
 
-const CACHE_NAME = 'aliados-cache-v2.1.2-chip-fix';
-const DATA_CACHE_NAME = 'aliados-com-data-v2.1.0-no-welcome';
+const CACHE_NAME = 'aliados-cache-v2.2.0-responsive-update';
+const DATA_CACHE_NAME = 'aliados-com-data-v2.2.0-export-filter';
 
 // URLs estáticas para cachear
 const urlsToCache = [

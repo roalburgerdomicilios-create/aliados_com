@@ -1,5 +1,7 @@
 # 📱 aliados_com PWA - Sistema de Cupones Moderno
 
+**🔄 Última actualización: 31/10/2025 - Versión con mejoras responsive y UX**
+
 ## 🎯 Descripción del Proyecto
 
 **aliados_com** es una Progressive Web App (PWA) moderna para la gestión de cupones digitales y aliados comerciales. El sistema ha sido completamente renovado con:
@@ -9,6 +11,9 @@
 - ✅ **Interfaz moderna** con cards, sombras y gradientes
 - ✅ **Funcionalidad offline completa** con Service Worker
 - ✅ **Iconos PWA profesionales** en todos los tamaños
+- ✅ **Scroll horizontal responsive** para tablas en móviles
+- ✅ **Exportación de Excel filtrada por aliado**
+- ✅ **Botón de carga de logo mejorado**
 
 ---
 
