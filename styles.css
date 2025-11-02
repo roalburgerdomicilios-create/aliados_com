@@ -80,8 +80,19 @@ p, span, div, h1, h2, h3, h4, h5, h6, label, a, li, td, th {
 #seccion-cupones label,
 #seccion-clientes label,
 .config-form label,
-.form-group label {
+.form-group label,
+.config-form .form-group label,
+.seccion .form-group label,
+label[for="config-nombre"],
+label[for="config-telefono"],
+label[for="config-direccion"],
+label[for="config-logo"],
+label[for="config-url"],
+label[for="config-descripcion"] {
     color: #000000 !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
 }
 
 /* Force black backgrounds on common container elements */
@@ -1143,22 +1154,27 @@ body {
     text-shadow: none;
 }
 
-/* Asegurar contraste en todas las secciones */
+/* Asegurar contraste en todas las secciones - REGLA ÚNICA */
 .seccion .form-group label,
 .config-form .form-group label,
+.config-form label,
 #seccion-configuracion label,
 #seccion-aliados label,
 #seccion-cupones label,
 #seccion-clientes label,
+.seccion label,
 label[for="config-nombre"],
 label[for="config-telefono"],
 label[for="config-direccion"],
-label[for="config-logo"] {
+label[for="config-logo"],
+label[for="config-url"],
+label[for="config-descripcion"] {
     color: #000000 !important;
     font-weight: 600 !important;
     font-size: 0.9rem !important;
     text-shadow: none !important;
     opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .form-group input,
